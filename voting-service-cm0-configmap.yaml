@@ -1,0 +1,37 @@
+apiVersion: v1
+data:
+  Dockerfile: |
+    FROM python:3.11-slim
+
+    WORKDIR /app
+
+    # Install system dependencies (curl for healthcheck)
+    RUN apt-get update && apt-get install -y curl && apt-get clean
+
+    # Install Python dependencies
+    COPY requirements.txt .
+    RUN pip install --no-cache-dir -r requirements.txt
+
+    # Copy application code
+    COPY . .
+
+    # Expose port
+    EXPOSE 3002
+
+    # Run application
+    CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "3002"]
+  main.py: "from fastapi import FastAPI\nimport logging\n\nfrom database.connection import init_db_pool, close_db_pool\nfrom services.kafka_producer import init_kafka_producer, close_kafka_producer\nfrom routes import polls, votes\n\n# Configure logging\nlogging.basicConfig(\n    level=logging.INFO,\n    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'\n)\nlogger = logging.getLogger(__name__)\n\n# Create FastAPI app\napp = FastAPI(\n    title=\"E-Vote Voting Service\",\n    description=\"Secure voting service with time-lock enforcement and anonymity\",\n    version=\"1.0.0\"\n)\n\n\n# Include routers\napp.include_router(polls.router)\napp.include_router(votes.router)\n\n# Health check endpoint\n@app.get(\"/health\")\nasync def health_check():\n    return {\n        \"status\": \"healthy\",\n        \"service\": \"voting\",\n        \"version\": \"1.0.0\"\n    }\n\n# Startup event\n@app.on_event(\"startup\")\nasync def startup():\n    logger.info(\"[STARTUP] Starting Voting Service...\")\n    \n    # Initialize database connection pool\n    await init_db_pool()\n    logger.info(\"[STARTUP] Database connection pool initialized\")\n    \n    # Initialize Kafka producer\n    init_kafka_producer()\n    logger.info(\"[STARTUP] Kafka producer initialized\")\n    \n    logger.info(\"[STARTUP] Voting Service ready!\")\n\n# Shutdown event\n@app.on_event(\"shutdown\")\nasync def shutdown():\n    logger.info(\"[SHUTDOWN] Shutting down Voting Service...\")\n    \n    # Close Kafka producer\n    close_kafka_producer()\n    logger.info(\"[SHUTDOWN] Kafka producer closed\")\n    \n    # Close database pool\n    await close_db_pool()\n    logger.info(\"[SHUTDOWN] Database connection pool closed\")\n    \n    logger.info(\"[SHUTDOWN] Voting Service stopped\")\n"
+  requirements.txt: |
+    fastapi==0.115.0
+    uvicorn[standard]==0.24.0
+    asyncpg==0.29.0
+    pydantic==2.5.0
+    python-jose[cryptography]==3.4.0
+    kafka-python==2.0.2
+    python-multipart==0.0.22
+    ecdsa>=0.19.0
+kind: ConfigMap
+metadata:
+  labels:
+    io.kompose.service: voting-service
+  name: voting-service-cm0

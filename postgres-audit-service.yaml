@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml -o /home/hojaldre/repos/E-Vote-GitOps/
+    kompose.version: 1.38.0 (HEAD)
+  labels:
+    io.kompose.service: postgres-audit
+  name: postgres-audit
+spec:
+  ports:
+    - name: "5434"
+      port: 5434
+      targetPort: 5432
+  selector:
+    io.kompose.service: postgres-audit

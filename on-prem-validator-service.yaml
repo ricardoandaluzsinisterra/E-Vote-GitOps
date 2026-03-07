@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml -o /home/hojaldre/repos/E-Vote-GitOps/
+    kompose.version: 1.38.0 (HEAD)
+  labels:
+    io.kompose.service: on-prem-validator
+  name: on-prem-validator
+spec:
+  ports:
+    - name: "3004"
+      port: 3004
+      targetPort: 8000
+  selector:
+    io.kompose.service: on-prem-validator

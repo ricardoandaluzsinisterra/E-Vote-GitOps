@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml -o /home/hojaldre/repos/E-Vote-GitOps/
+    kompose.version: 1.38.0 (HEAD)
+  labels:
+    io.kompose.service: postgres-audit
+  name: postgres-audit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: postgres-audit
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml -o /home/hojaldre/repos/E-Vote-GitOps/
+        kompose.version: 1.38.0 (HEAD)
+      labels:
+        io.kompose.service: postgres-audit
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_DB
+              value: audit_db
+            - name: POSTGRES_PASSWORD
+              value: change-me-audit-root-password
+            - name: POSTGRES_USER
+              value: postgres
+          image: postgres:17-alpine
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready -U postgres -d audit_db
+            failureThreshold: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+          name: postgres-audit
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-audit-data
+            - mountPath: /docker-entrypoint-initdb.d/01-schema.sql
+              name: postgres-audit-cm1
+              readOnly: true
+              subPath: 01-schema.sql
+      restartPolicy: Always
+      volumes:
+        - name: postgres-audit-data
+          persistentVolumeClaim:
+            claimName: postgres-audit-data
+        - configMap:
+            items:
+              - key: postgres_audit.sql
+                path: 01-schema.sql
+            name: postgres-audit-cm1
+          name: postgres-audit-cm1

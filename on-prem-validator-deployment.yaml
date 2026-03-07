@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml -o /home/hojaldre/repos/E-Vote-GitOps/
+    kompose.version: 1.38.0 (HEAD)
+  labels:
+    io.kompose.service: on-prem-validator
+  name: on-prem-validator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: on-prem-validator
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml -o /home/hojaldre/repos/E-Vote-GitOps/
+        kompose.version: 1.38.0 (HEAD)
+      labels:
+        io.kompose.service: on-prem-validator
+    spec:
+      containers:
+        - env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+          envFrom:
+            - configMapRef:
+                name: env
+          image: on-prem-validator
+          livenessProbe:
+            exec:
+              command:
+                - curl
+                - -f
+                - http://localhost:8000/openapi.json
+            failureThreshold: 5
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 5
+          name: on-prem-validator
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+      restartPolicy: Always

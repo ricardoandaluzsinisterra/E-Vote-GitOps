@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml -o /home/hojaldre/repos/E-Vote-GitOps/
+    kompose.version: 1.38.0 (HEAD)
+  labels:
+    io.kompose.service: auth-service
+  name: auth-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: auth-service
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml -o /home/hojaldre/repos/E-Vote-GitOps/
+        kompose.version: 1.38.0 (HEAD)
+      labels:
+        io.kompose.service: auth-service
+    spec:
+      containers:
+        - args:
+            - uvicorn
+            - auth_service.main:app
+            - --host
+            - 0.0.0.0
+            - --port
+            - "3001"
+          env:
+            - name: DB_HOST
+              value: postgres-auth
+            - name: DB_NAME
+              value: auth_db
+            - name: DB_PASSWORD
+              value: auth_user_password_change_me_456
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: auth_user
+            - name: JWT_ALGORITHM
+              value: HS256
+            - name: JWT_EXPIRY_HOURS
+              value: "24"
+            - name: OTP_EXPIRY_MINUTES
+              value: "10"
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: SERVICE_PORT
+              value: "3001"
+            - name: SERVICE_ROLE
+              value: auth
+          envFrom:
+            - configMapRef:
+                name: env
+          image: auth-service
+          livenessProbe:
+            exec:
+              command:
+                - curl
+                - -f
+                - http://localhost:3001/health
+            failureThreshold: 3
+            periodSeconds: 30
+            timeoutSeconds: 5
+          name: auth-service
+          ports:
+            - containerPort: 3001
+              protocol: TCP
+      restartPolicy: Always
