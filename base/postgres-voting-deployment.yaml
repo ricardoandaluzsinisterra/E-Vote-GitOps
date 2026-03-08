@@ -28,6 +28,16 @@ spec:
                 name: evote-env
             - secretRef:
                 name: evote-secrets
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: evote-secrets
+                  key: VOTING_DB_PASSWORD
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_DB
+              value: "voting_db"
           image: postgres:17-alpine
           livenessProbe:
             exec:
