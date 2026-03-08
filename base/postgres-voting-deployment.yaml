@@ -23,13 +23,11 @@ spec:
         io.kompose.service: postgres-voting
     spec:
       containers:
-        - env:
-            - name: POSTGRES_DB
-              value: voting_db
-            - name: POSTGRES_PASSWORD
-              value: change-me-voting-root-password
-            - name: POSTGRES_USER
-              value: postgres
+        - envFrom:
+            - configMapRef:
+                name: evote-env
+            - secretRef:
+                name: evote-secrets
           image: postgres:17-alpine
           livenessProbe:
             exec:

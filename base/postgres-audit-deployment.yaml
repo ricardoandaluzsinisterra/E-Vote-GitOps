@@ -23,13 +23,11 @@ spec:
         io.kompose.service: postgres-audit
     spec:
       containers:
-        - env:
-            - name: POSTGRES_DB
-              value: audit_db
-            - name: POSTGRES_PASSWORD
-              value: change-me-audit-root-password
-            - name: POSTGRES_USER
-              value: postgres
+        - envFrom:
+            - configMapRef:
+                name: evote-env
+            - secretRef:
+                name: evote-secrets
           image: postgres:17-alpine
           livenessProbe:
             exec:

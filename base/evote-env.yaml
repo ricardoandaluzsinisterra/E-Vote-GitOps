@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: evote-env
+data:
+  LOG_LEVEL: "INFO"
+  TOKEN_TTL_SECONDS: "604800"
+  ONPREM_VALIDATOR_URL: "http://on-prem-validator:8000"
+  VOTERS_PATH: "/app/on-prem-validator/services/voters.csv"

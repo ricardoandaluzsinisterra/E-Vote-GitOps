@@ -21,9 +21,11 @@ spec:
         io.kompose.service: api-gateway
     spec:
       containers:
-        - env:
-            - name: JWT_SECRET_KEY
-              value: change-me-to-a-long-random-secret-key
+        - envFrom:
+            - configMapRef:
+                name: evote-env
+            - secretRef:
+                name: evote-secrets
           image: api-gateway
           livenessProbe:
             exec:

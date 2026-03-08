@@ -21,12 +21,11 @@ spec:
         io.kompose.service: on-prem-validator
     spec:
       containers:
-        - env:
-            - name: PYTHONUNBUFFERED
-              value: "1"
-          envFrom:
+        - envFrom:
             - configMapRef:
-                name: env
+                name: evote-env
+            - secretRef:
+                name: evote-secrets
           image: on-prem-validator
           livenessProbe:
             exec:

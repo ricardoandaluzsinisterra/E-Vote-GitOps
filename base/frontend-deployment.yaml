@@ -23,9 +23,11 @@ spec:
         io.kompose.service: frontend
     spec:
       containers:
-        - env:
-            - name: VITE_API_URL
-              value: http://localhost:8000
+        - envFrom:
+            - configMapRef:
+                name: evote-env
+            - secretRef:
+                name: evote-secrets
           image: frontend
           name: react-frontend
           ports:

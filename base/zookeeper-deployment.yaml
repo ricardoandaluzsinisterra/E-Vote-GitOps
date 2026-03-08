@@ -21,11 +21,11 @@ spec:
         io.kompose.service: zookeeper
     spec:
       containers:
-        - env:
-            - name: ZOOKEEPER_CLIENT_PORT
-              value: "2181"
-            - name: ZOOKEEPER_TICK_TIME
-              value: "2000"
+        - envFrom:
+            - configMapRef:
+                name: evote-env
+            - secretRef:
+                name: evote-secrets
           image: confluentinc/cp-zookeeper:7.4.0
           name: zookeeper
       restartPolicy: Always

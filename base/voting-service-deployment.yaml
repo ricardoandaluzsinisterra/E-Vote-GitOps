@@ -30,33 +30,11 @@ spec:
             - 0.0.0.0
             - --port
             - "3002"
-          env:
-            - name: DB_HOST
-              value: postgres-voting
-            - name: DB_NAME
-              value: voting_db
-            - name: DB_PASSWORD
-              value: voting_user_password_change_me_abc
-            - name: DB_PORT
-              value: "5432"
-            - name: DB_USER
-              value: voting_user
-            - name: JWT_ALGORITHM
-              value: HS256
-            - name: JWT_SECRET_KEY
-              value: change-me-to-a-long-random-secret-key
-            - name: KAFKA_BOOTSTRAP
-              value: kafka:9092
-            - name: KAFKA_TOPIC_VOTES
-              value: vote.cast
-            - name: PYTHONUNBUFFERED
-              value: "1"
-            - name: SERVICE_PORT
-              value: "3002"
-            - name: SERVICE_ROLE
-              value: voting
-            - name: VOTE_SIGNING_KEY
-              value: change-me-to-another-long-random-secret
+          envFrom:
+            - configMapRef:
+                name: evote-env
+            - secretRef:
+                name: evote-secrets
           image: voting-service
           livenessProbe:
             exec:

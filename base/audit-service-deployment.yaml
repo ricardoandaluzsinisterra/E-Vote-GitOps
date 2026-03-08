@@ -30,35 +30,11 @@ spec:
             - 0.0.0.0
             - --port
             - "3003"
-          env:
-            - name: AUDIT_LOG_SECRET
-              value: change-me-to-yet-another-long-random-secret
-            - name: DB_HOST
-              value: postgres-audit
-            - name: DB_NAME
-              value: audit_db
-            - name: DB_PASSWORD
-              value: audit_user_password_change_me_xyz
-            - name: DB_PORT
-              value: "5432"
-            - name: DB_USER
-              value: audit_service_user
-            - name: JWT_ALGORITHM
-              value: HS256
-            - name: JWT_SECRET_KEY
-              value: change-me-to-a-long-random-secret-key
-            - name: KAFKA_BOOTSTRAP
-              value: kafka:9092
-            - name: KAFKA_CONSUMER_GROUP
-              value: audit_service_group
-            - name: KAFKA_TOPICS
-              value: vote.cast,auth.login,auth.logout,poll.created
-            - name: PYTHONUNBUFFERED
-              value: "1"
-            - name: SERVICE_PORT
-              value: "3003"
-            - name: SERVICE_ROLE
-              value: audit
+          envFrom:
+            - configMapRef:
+                name: evote-env
+            - secretRef:
+                name: evote-secrets
           image: audit-service
           livenessProbe:
             exec:
