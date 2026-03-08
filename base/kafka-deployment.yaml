@@ -20,6 +20,7 @@ spec:
       labels:
         io.kompose.service: kafka
     spec:
+      enableServiceLinks: false
       containers:
         - envFrom:
             - configMapRef:

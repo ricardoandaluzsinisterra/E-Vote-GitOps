@@ -20,6 +20,7 @@ spec:
       labels:
         io.kompose.service: zookeeper
     spec:
+      enableServiceLinks: false
       containers:
         - envFrom:
             - configMapRef:
