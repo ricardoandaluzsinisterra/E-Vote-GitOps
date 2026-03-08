@@ -28,4 +28,6 @@ spec:
                 name: evote-secrets
           image: confluentinc/cp-zookeeper:7.4.0
           name: zookeeper
+      imagePullSecrets:
+        - name: ghcr-secret
       restartPolicy: Always

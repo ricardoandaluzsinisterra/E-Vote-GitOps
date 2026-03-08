@@ -47,6 +47,8 @@ spec:
               name: postgres-audit-cm1
               readOnly: true
               subPath: 01-schema.sql
+      imagePullSecrets:
+        - name: ghcr-secret
       restartPolicy: Always
       volumes:
         - name: postgres-audit-data

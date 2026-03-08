@@ -35,7 +35,7 @@ spec:
                 name: evote-env
             - secretRef:
                 name: evote-secrets
-          image: voting-service
+          image: ghcr.io/ricardoandaluzsinisterra/evote-voting-service:latest
           livenessProbe:
             exec:
               command:
@@ -52,6 +52,8 @@ spec:
           volumeMounts:
             - mountPath: /app
               name: voting-service-cm0
+      imagePullSecrets:
+        - name: ghcr-secret
       restartPolicy: Always
       volumes:
         - configMap:

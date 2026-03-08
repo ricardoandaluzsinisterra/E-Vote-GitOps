@@ -26,7 +26,7 @@ spec:
                 name: evote-env
             - secretRef:
                 name: evote-secrets
-          image: api-gateway
+          image: ghcr.io/ricardoandaluzsinisterra/evote-api-gateway:latest
           livenessProbe:
             exec:
               command:
@@ -40,4 +40,6 @@ spec:
           ports:
             - containerPort: 8000
               protocol: TCP
+      imagePullSecrets:
+        - name: ghcr-secret
       restartPolicy: Always

@@ -40,4 +40,6 @@ spec:
               protocol: TCP
             - containerPort: 29092
               protocol: TCP
+      imagePullSecrets:
+        - name: ghcr-secret
       restartPolicy: Always
