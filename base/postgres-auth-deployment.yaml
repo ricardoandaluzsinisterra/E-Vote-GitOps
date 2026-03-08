@@ -42,7 +42,10 @@ spec:
           livenessProbe:
             exec:
               command:
+                - sh
+                - -c
                 - pg_isready -U postgres -d auth_db
+            initialDelaySeconds: 10
             failureThreshold: 5
             periodSeconds: 10
             timeoutSeconds: 3

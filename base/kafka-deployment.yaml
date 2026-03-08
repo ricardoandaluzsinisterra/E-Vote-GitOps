@@ -30,7 +30,10 @@ spec:
           livenessProbe:
             exec:
               command:
+                - sh
+                - -c
                 - kafka-topics --bootstrap-server localhost:9092 --list >/dev/null 2>&1 || exit 1
+            initialDelaySeconds: 30
             failureThreshold: 10
             periodSeconds: 10
             timeoutSeconds: 5
