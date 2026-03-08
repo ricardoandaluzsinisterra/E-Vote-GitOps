@@ -26,7 +26,7 @@ spec:
                 name: evote-env
             - secretRef:
                 name: evote-secrets
-          image: ghcr.io/ricardoandaluzsinisterra/evote-on-prem-validator:latest
+          image: ghcr.io/ricardoandaluzsinisterra/evote-on-prem-validator:main-dcbf07a
           livenessProbe:
             exec:
               command:

@@ -35,7 +35,7 @@ spec:
                 name: evote-env
             - secretRef:
                 name: evote-secrets
-          image: ghcr.io/ricardoandaluzsinisterra/evote-voting-service:latest
+          image: ghcr.io/ricardoandaluzsinisterra/evote-voting-service:main-dcbf07a
           livenessProbe:
             exec:
               command:
