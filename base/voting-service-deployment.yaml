@@ -22,6 +22,13 @@ spec:
       labels:
         io.kompose.service: voting-service
     spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox
+          command:
+            - sh
+            - -c
+            - until nc -z postgres-voting 5432; do echo "waiting for postgres-voting..."; sleep 2; done
       containers:
         - args:
             - uvicorn
@@ -35,6 +42,20 @@ spec:
                 name: evote-env
             - secretRef:
                 name: evote-secrets
+          env:
+            - name: DB_HOST
+              value: "postgres-voting"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: "voting_user"
+            - name: DB_NAME
+              value: "voting_db"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: evote-secrets
+                  key: VOTING_DB_PASSWORD
           image: ghcr.io/ricardoandaluzsinisterra/evote-voting-service:main-dcbf07a
           livenessProbe:
             exec:
