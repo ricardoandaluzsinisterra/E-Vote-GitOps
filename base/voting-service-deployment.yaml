@@ -28,7 +28,8 @@ spec:
           command:
             - sh
             - -c
-            - until nc -z postgres-voting 5432; do echo "waiting for postgres-voting..."; sleep 2; done
+            - until (echo > /dev/tcp/postgres-voting/5432) 2>/dev/null; do echo "waiting for postgres-voting..."; sleep 2; done
+          timeoutSeconds: 60
       containers:
         - args:
             - uvicorn
