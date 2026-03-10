@@ -29,9 +29,21 @@ spec:
             - sh
             - -c
             - |
-              i=0; until (echo > /dev/tcp/postgres-voting/5432) 2>/dev/null; do
-                i=$((i+1)); [ $i -ge 30 ] && echo "Timed out waiting for postgres-voting" && exit 1;
-                echo "waiting for postgres-voting..."; sleep 2;
+              echo "[wait-for-db] Starting. Target: postgres-voting:5432"
+              i=0
+              while true; do
+                result=$(nc -w 1 postgres-voting 5432 </dev/null 2>&1; echo "exit:$?")
+                echo "[wait-for-db] attempt $i: $result"
+                if echo "$result" | grep -q "exit:0"; then
+                  echo "[wait-for-db] Connected!"
+                  exit 0
+                fi
+                i=$((i+1))
+                if [ $i -ge 30 ]; then
+                  echo "[wait-for-db] Timed out after $((i*2))s"
+                  exit 1
+                fi
+                sleep 2
               done
       containers:
         - args:
