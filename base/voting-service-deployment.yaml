@@ -22,6 +22,7 @@ spec:
       labels:
         io.kompose.service: voting-service
     spec:
+      activeDeadlineSeconds: 120
       initContainers:
         - name: wait-for-db
           image: busybox
@@ -29,7 +30,6 @@ spec:
             - sh
             - -c
             - until (echo > /dev/tcp/postgres-voting/5432) 2>/dev/null; do echo "waiting for postgres-voting..."; sleep 2; done
-          timeoutSeconds: 60
       containers:
         - args:
             - uvicorn

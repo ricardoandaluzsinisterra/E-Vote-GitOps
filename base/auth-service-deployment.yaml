@@ -22,13 +22,14 @@ spec:
       labels:
         io.kompose.service: auth-service
     spec:
+      activeDeadlineSeconds: 120
       initContainers:
         - name: wait-for-db
           image: busybox
           command:
             - sh
             - -c
-            - until nc -z postgres-auth 5432; do echo "waiting for postgres-auth..."; sleep 2; done
+            - until (echo > /dev/tcp/postgres-auth/5432) 2>/dev/null; do echo "waiting for postgres-auth..."; sleep 2; done
       containers:
         - args:
             - uvicorn
