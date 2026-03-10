@@ -22,14 +22,17 @@ spec:
       labels:
         io.kompose.service: audit-service
     spec:
-      activeDeadlineSeconds: 120
       initContainers:
         - name: wait-for-db
           image: busybox
           command:
             - sh
             - -c
-            - until (echo > /dev/tcp/postgres-audit/5432) 2>/dev/null; do echo "waiting for postgres-audit..."; sleep 2; done
+            - |
+              i=0; until (echo > /dev/tcp/postgres-audit/5432) 2>/dev/null; do
+                i=$((i+1)); [ $i -ge 30 ] && echo "Timed out waiting for postgres-audit" && exit 1;
+                echo "waiting for postgres-audit..."; sleep 2;
+              done
       containers:
         - args:
             - uvicorn
