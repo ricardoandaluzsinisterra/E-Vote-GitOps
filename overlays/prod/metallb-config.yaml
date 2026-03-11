@@ -1,0 +1,17 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: evote-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 100.76.105.57/32
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: evote-l2
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+  - evote-pool
