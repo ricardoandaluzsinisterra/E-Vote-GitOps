@@ -72,7 +72,7 @@ spec:
                 secretKeyRef:
                   name: evote-secrets
                   key: AUTH_DB_PASSWORD
-          image: ghcr.io/ricardoandaluzsinisterra/evote-auth-service:main-dcbf07a
+          image: ghcr.io/ricardoandaluzsinisterra/evote-auth-service:main-e01067c
           livenessProbe:
             exec:
               command:
