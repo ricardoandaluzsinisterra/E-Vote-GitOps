@@ -46,7 +46,7 @@ spec:
                 sleep 2
               done
       containers:
-          - command:
+          command:
             - uvicorn
             - voting_service.main:app
             - --host
