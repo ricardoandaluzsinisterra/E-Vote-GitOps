@@ -28,7 +28,7 @@ spec:
                 name: evote-env
             - secretRef:
                 name: evote-secrets
-          image: ghcr.io/ricardoandaluzsinisterra/evote-frontend:main-9e4abc0
+          image: ghcr.io/ricardoandaluzsinisterra/evote-frontend:main-450f564
           name: react-frontend
           ports:
             - containerPort: 5173

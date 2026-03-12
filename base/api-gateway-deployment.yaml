@@ -26,7 +26,7 @@ spec:
                 name: evote-env
             - secretRef:
                 name: evote-secrets
-          image: ghcr.io/ricardoandaluzsinisterra/evote-api-gateway:main-9e4abc0
+          image: ghcr.io/ricardoandaluzsinisterra/evote-api-gateway:main-450f564
           livenessProbe:
             exec:
               command:
