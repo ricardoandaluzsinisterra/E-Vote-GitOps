@@ -72,7 +72,7 @@ spec:
                 secretKeyRef:
                   name: evote-secrets
                   key: VOTING_DB_PASSWORD
-          image: ghcr.io/ricardoandaluzsinisterra/evote-voting-service:main-e01067c
+          image: ghcr.io/ricardoandaluzsinisterra/evote-voting-service:main-23ab5ff
           livenessProbe:
             exec:
               command:
